@@ -27,7 +27,7 @@ class Nav extends React.Component {
 
     if (query.length > 1) {
       try {
-        const res = await axios.get(`https://personalblogbackend-n60w.onrender.com/articles/search/${query}`);
+        const res = await axios.get(`http://localhost:5000/articles/search/${query}`);
         this.setState({ results: res.data });
       } catch (err) {
         console.error(err);

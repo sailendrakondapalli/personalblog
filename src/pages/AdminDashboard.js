@@ -27,7 +27,7 @@ class RichEditor extends Component {
       formData.append("image", file);
 
       try {
-        const res = await axios.post("https://personalblogbackend-n60w.onrender.com/articles/upload-image", formData, {
+        const res = await axios.post("http://localhost:5000/articles/upload-image", formData, {
           headers: { "Content-Type": "multipart/form-data" },
         });
         const imageUrl = res.data.url;
@@ -57,7 +57,7 @@ class RichEditor extends Component {
   handlePublish = async () => {
     try {
       const { title, value } = this.state;
-      await axios.post("https://personalblogbackend-n60w.onrender.com/articles/add", {
+      await axios.post("http://localhost:5000/articles/add", {
         title,
         description: value,
         author: "Sailendra", // ideally from token

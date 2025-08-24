@@ -16,14 +16,14 @@ function ArticleDetail() {
 
   useEffect(() => {
     axios
-      .get(`https://personalblogbackend-n60w.onrender.com/articles/${id}`)
+      .get(`http://localhost:5000/articles/${id}`)
       .then((res) => setArticle(res.data))
       .catch((err) => console.error(err));
   }, [id]);
 
   const handleLike = async () => {
     if (!currentUser) return alert("Please login first!");
-    const res = await axios.post(`https://personalblogbackend-n60w.onrender.com/articles/${id}/like`, {
+    const res = await axios.post(`http://localhost:5000/articles/${id}/like`, {
       userId: currentUser.id,
     });
     setArticle((prev) => ({ ...prev, likes: res.data.likes }));
@@ -44,7 +44,7 @@ function ArticleDetail() {
 
   const handleComment = async () => {
     if (!currentUser || !commentText) return;
-    const res = await axios.post(`https://personalblogbackend-n60w.onrender.com/articles/${id}/comment`, {
+    const res = await axios.post(`http://localhost:5000/articles/${id}/comment`, {
       userId: currentUser.id,
       text: commentText,
     });

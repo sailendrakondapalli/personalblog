@@ -10,44 +10,30 @@ class Login extends Component {
   handleChange = (e) => this.setState({ [e.target.name]: e.target.value });
 
   handleSubmit = async (e) => {
-  e.preventDefault();
-  try {
-    const res = await axios.post("https://personalblogbackend-n60w.onrender.com/auth/login", this.state);
-    
-    // Save user info to localStorage
-    localStorage.setItem("token", res.data.token);
-    localStorage.setItem("role", res.data.role);
-    localStorage.setItem("name", res.data.name);
-    localStorage.setItem("id", res.data.id);  // <-- add this
+    e.preventDefault();
+    try {
+      const res = await axios.post("http://localhost:5000/auth/login", this.state);
 
-    if (res.data.role === "admin") window.location.href = "/admin";
-    else window.location.href = "/";
-  } catch (err) {
-    alert(err.response?.data?.message || "Login failed!");
-  }
-};
+      localStorage.setItem("token", res.data.token);
+      localStorage.setItem("role", res.data.role);
+      localStorage.setItem("name", res.data.name);
+      localStorage.setItem("id", res.data.id);
 
+      if (res.data.role === "admin") window.location.href = "/";
+      else window.location.href = "/";
+    } catch (err) {
+      alert(err.response?.data?.message || "Login failed!");
+    }
+  };
 
   render() {
     return (
       <div style={{ padding: "50px", textAlign: "center" }}>
         <h2>Login</h2>
         <form onSubmit={this.handleSubmit}>
-          <input
-            type="email"
-            name="email"
-            placeholder="Email"
-            value={this.state.email}
-            onChange={this.handleChange}
-          />
+          <input type="email" name="email" placeholder="Email" value={this.state.email} onChange={this.handleChange} />
           <br /><br />
-          <input
-            type="password"
-            name="password"
-            placeholder="Password"
-            value={this.state.password}
-            onChange={this.handleChange}
-          />
+          <input type="password" name="password" placeholder="Password" value={this.state.password} onChange={this.handleChange} />
           <br /><br />
           <button type="submit">Login</button>
         </form>
