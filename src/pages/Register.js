@@ -12,7 +12,7 @@ class Register extends Component {
   handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("http://localhost:5000/auth/register", this.state);
+      const res = await axios.post("https://personalblogbackend-n60w.onrender.com/auth/register", this.state);
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("role", res.data.role);
       localStorage.setItem("name", res.data.name);

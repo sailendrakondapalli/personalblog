@@ -14,7 +14,7 @@ class Body extends React.Component {
 
   fetchArticles = () => {
     axios
-      .get("http://localhost:5000/articles")   // 🔹 Localhost URL
+      .get("https://personalblogbackend-n60w.onrender.com/articles")   // 🔹 Localhost URL
       .then((res) => this.setState({ articles: res.data }))
       .catch((err) => console.error(err));
   };
@@ -23,7 +23,7 @@ class Body extends React.Component {
     if (!window.confirm("Are you sure you want to delete this article?")) return;
     try {
       const token = localStorage.getItem("token");
-      await axios.delete(`http://localhost:5000/articles/${id}`, {   // 🔹 Localhost URL
+      await axios.delete(`https://personalblogbackend-n60w.onrender.com/articles/${id}`, {   // 🔹 Localhost URL
         headers: { Authorization: `Bearer ${token}` },
       });
       this.fetchArticles();

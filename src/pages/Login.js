@@ -12,7 +12,7 @@ class Login extends Component {
   handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("http://localhost:5000/auth/login", this.state);
+      const res = await axios.post("https://personalblogbackend-n60w.onrender.com/auth/login", this.state);
 
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("role", res.data.role);
