@@ -37,16 +37,17 @@ class Body extends React.Component {
 
     return (
       <div className="body">
+        
         <h2 className="section-title">Latest Articles</h2>
-
-        {/* Admin Panel Link - only for admin */}
-        {isAdmin && (
+{isAdmin && (
           <div style={{ marginBottom: "20px" }}>
             <Link to="/ap">
-              <img src="/images/writing.png" alt="write"/>
+              <img src="/images/note.png" alt="write"   style={{ marginLeft:'80%', width:'30px',height:'30px'}} />
             </Link>
           </div>
         )}
+        {/* Admin Panel Link - only for admin */}
+        
 
         <div className="articles">
           {this.state.articles.map((article) => (
@@ -91,6 +92,7 @@ class Body extends React.Component {
             </div>
           ))}
         </div>
+        
       </div>
     );
   }

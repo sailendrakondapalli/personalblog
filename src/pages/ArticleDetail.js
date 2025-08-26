@@ -7,6 +7,7 @@ function ArticleDetail() {
   const [article, setArticle] = useState(null);
   const [commentText, setCommentText] = useState("");
   const [currentUser, setCurrentUser] = useState(null);
+  const [liked, setLiked] = useState(false); // track like status
 
   useEffect(() => {
     const userId = localStorage.getItem("id");
@@ -21,12 +22,20 @@ function ArticleDetail() {
       .catch((err) => console.error(err));
   }, [id]);
 
-  const handleLike = async () => {
+const handleLike = async () => {
     if (!currentUser) return alert("Please login first!");
-    const res = await axios.post(`https://personalblogbackend-n60w.onrender.com/articles/${id}/like`, {
-      userId: currentUser.id,
-    });
-    setArticle((prev) => ({ ...prev, likes: res.data.likes }));
+    try {
+      const res = await axios.post(
+        `https://personalblogbackend-n60w.onrender.com/articles/${id}/like`,
+        {
+          userId: currentUser.id,
+        }
+      );
+      setArticle((prev) => ({ ...prev, likes: res.data.likes }));
+      setLiked((prev) => !prev); // toggle image
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   const handleShare = () => {
@@ -54,6 +63,8 @@ function ArticleDetail() {
 
   if (!article) return <p>Loading...</p>;
 
+
+  
   return (
     <div className="article-detail">
       {article.image && (
@@ -67,11 +78,17 @@ function ArticleDetail() {
       <div dangerouslySetInnerHTML={{ __html: article.description }} />
 
       {/* Likes */}
-      <div style={{ marginTop: "20px" }}>
-        <button onClick={handleLike}>
-          👍 Like ({(article.likes || []).length})
-        </button>
-      </div>
+      {/* Likes */}
+<div style={{ marginTop: "20px" }}>
+  <button onClick={handleLike}>
+    <img
+      src={liked ? "/images/likefinal.png" : "/images/likeinitial.png"}
+      alt="like"
+      style={{ width: "25px", cursor: "pointer" }}
+    />
+    ({(article.likes || []).length})
+  </button>
+</div>
 
       {/* Share */}
       <div style={{ marginTop: "20px" }}>

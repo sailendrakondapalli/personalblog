@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 class Nav extends React.Component {
@@ -10,8 +10,40 @@ class Nav extends React.Component {
       openn: false,
       query: "",
       results: [],
+      user: {
+        name: localStorage.getItem("name") || null,
+        role: localStorage.getItem("role") || null,
+      },
     };
+    this.sidebarRef = React.createRef();
   }
+
+  componentDidMount() {
+    document.addEventListener("click", this.handleClickOutside, true);
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener("click", this.handleClickOutside, true);
+  }
+
+  handleClickOutside = (e) => {
+    if (
+      this.state.open &&
+      this.sidebarRef.current &&
+      !this.sidebarRef.current.contains(e.target) &&
+      !e.target.closest(".hamburger")
+    ) {
+      this.setState({ open: false });
+    }
+
+    if (
+      this.state.openn &&
+      !e.target.closest(".usericon") &&
+      !e.target.closest(".profile-dropdown")
+    ) {
+      this.setState({ openn: false });
+    }
+  };
 
   hamburger = () => {
     this.setState({ open: !this.state.open });
@@ -21,13 +53,29 @@ class Nav extends React.Component {
     this.setState({ openn: !this.state.openn });
   };
 
+  handleLogout = () => {
+    // Clear localStorage
+    localStorage.removeItem("token");
+    localStorage.removeItem("role");
+    localStorage.removeItem("name");
+    localStorage.removeItem("id");
+
+    // Update state
+    this.setState({ user: { name: null, role: null }, openn: false });
+
+    // Navigate to home
+    window.location.href = "/";
+  };
+
   handleSearchChange = async (e) => {
     const query = e.target.value;
     this.setState({ query });
 
     if (query.length > 1) {
       try {
-        const res = await axios.get(`https://personalblogbackend-n60w.onrender.com/articles/search/${query}`);
+        const res = await axios.get(
+          `https://personalblogbackend-n60w.onrender.com/articles/search/${query}`
+        );
         this.setState({ results: res.data });
       } catch (err) {
         console.error(err);
@@ -38,8 +86,10 @@ class Nav extends React.Component {
   };
 
   render() {
+    const { user } = this.state;
+
     return (
-      <div className="navbar" style={{ position: "relative", padding: "10px" }}>
+      <div className="navbar">
         {/* Hamburger */}
         <div className="hamburger">
           <img
@@ -48,40 +98,22 @@ class Nav extends React.Component {
             onClick={this.hamburger}
           />
         </div>
-        {this.state.open && <div>{/* Add hamburger menu items here */}</div>}
 
         {/* Search */}
-        <div
-          className="search"
-          style={{ display: "inline-block", marginLeft: "20px", position: "relative" }}
-        >
+        <div className="search">
           <input
             type="search"
             placeholder="Search articles..."
             value={this.state.query}
             onChange={this.handleSearchChange}
-            style={{ padding: "5px", width: "250px" }}
           />
           {this.state.results.length > 0 && (
-            <div
-              style={{
-                position: "absolute",
-                top: "100%", // directly below the input
-                left: "0",
-                width: "100%", // same width as input
-                background: "#fff",
-                border: "1px solid #ccc",
-                maxHeight: "200px",
-                overflowY: "auto",
-                zIndex: 100,
-              }}
-            >
+            <div className="search-dropdown">
               {this.state.results.map((article) => (
-                <div key={article._id} style={{ padding: "5px 10px" }}>
+                <div key={article._id}>
                   <Link
                     to={`/article/${article._id}`}
                     onClick={() => this.setState({ query: "", results: [] })}
-                    style={{ textDecoration: "none", color: "#000" }}
                   >
                     {article.title}
                   </Link>
@@ -92,10 +124,43 @@ class Nav extends React.Component {
         </div>
 
         {/* User profile */}
-        <div className="usericon" style={{ display: "inline-block", marginLeft: "20px" }}>
-          <img src="/images/user.png" alt="user" onClick={this.profile} />
+        <div className="usericon">
+          <img
+            src="/images/user.png"
+            alt="user"
+            onClick={this.profile}
+          />
         </div>
-        {this.state.openn && <p>My Profile</p>}
+
+        {this.state.openn && (
+  <div className="profile-dropdown">
+    {user.name ? (
+      <>
+        <p>My Profile</p>
+        <p>Settings</p>
+        <p onClick={this.handleLogout} style={{ cursor: "pointer" }}>
+          Logout
+        </p>
+      </>
+    ) : (
+      <div className="auth-links">
+        <Link to="/login">Login</Link>
+        <Link to="/register">Register</Link>
+      </div>
+    )}
+  </div>
+)}
+
+
+        {/* Sidebar */}
+        <div
+          className={`sidebar ${this.state.open ? "open" : ""}`}
+          ref={this.sidebarRef}
+        >
+          <a href="/">Home</a>
+          <a href="/about">About Author</a>
+          <a href="/contact">Contact</a>
+        </div>
       </div>
     );
   }
