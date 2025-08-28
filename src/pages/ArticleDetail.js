@@ -23,20 +23,20 @@ function ArticleDetail() {
   }, [id]);
 
 const handleLike = async () => {
-    if (!currentUser) return alert("Please login first!");
-    try {
-      const res = await axios.post(
-        `https://personalblogbackend-n60w.onrender.com/articles/${id}/like`,
-        {
-          userId: currentUser.id,
-        }
-      );
-      setArticle((prev) => ({ ...prev, likes: res.data.likes }));
-      setLiked((prev) => !prev); // toggle image
-    } catch (err) {
-      console.error(err);
-    }
-  };
+  if (!currentUser) return alert("Please login first!");
+  try {
+    const res = await axios.post(
+      `https://personalblogbackend-n60w.onrender.com/articles/${id}/like`,
+      { userId: currentUser.id }
+    );
+
+    setArticle((prev) => ({ ...prev, likes: res.data.likes }));
+    setLiked(res.data.likes.some((u) => u._id === currentUser.id)); 
+  } catch (err) {
+    console.error(err);
+  }
+};
+
 
   const handleShare = () => {
     const shareData = {

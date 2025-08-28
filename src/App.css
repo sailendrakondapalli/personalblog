@@ -49,7 +49,7 @@ button:hover {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: linear-gradient(90deg, #ff6a00, #ee0979);
+  background: linear-gradient(90deg, #561d1d, #825f70);
   color: #fff;
   padding: 12px 20px;
   font-variant: small-caps;
@@ -218,7 +218,7 @@ button:hover {
 
 /* ================= Footer ================= */
 .footer {
-  background: linear-gradient(90deg, #ee0979, #ff6a00);
+  background: linear-gradient(90deg, #561d1d, #825f70);
   color: #fff;
   display: flex;
   justify-content: space-between;
